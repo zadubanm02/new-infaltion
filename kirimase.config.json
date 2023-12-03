@@ -1,0 +1,19 @@
+{
+  "hasSrc": false,
+  "packages": [
+    "shadcn-ui",
+    "prisma",
+    "kinde",
+    "resend",
+    "stripe"
+  ],
+  "preferredPackageManager": "yarn",
+  "t3": false,
+  "alias": "@",
+  "rootPath": "",
+  "componentLib": "shadcn-ui",
+  "provider": "planetscale",
+  "orm": "prisma",
+  "driver": "mysql",
+  "auth": "kinde"
+}
