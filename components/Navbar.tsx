@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import SignOutBtn from "@/components/auth/SignOutBtn";
 
 import { ModeToggle } from "@/components/ui/ThemeToggle";
+import { BadgePercent } from "lucide-react";
 
 export default async function Navbar() {
   const { session } = await getUserAuth();
@@ -19,11 +20,12 @@ export default async function Navbar() {
 
   if (session?.user) {
     return (
-      <div className="border-b mb-2 md:p-0">
+      <div className="border-b mb-2 md:p-0 px-2">
         <nav className="py-2 flex items-center justify-between transition-all duration-300 max-w-6xl mx-auto">
-          <h1 className="font-semibold hover:opacity-75 transition-hover cursor-pointer">
-            <Link href="/">Logo</Link>
-          </h1>
+          <Link href="/" className="hidden items-center space-x-2 md:flex">
+            <BadgePercent />
+            <span className="hidden font-bold sm:inline-block">Crusher</span>
+          </Link>
           <div className="space-x-2 flex items-center">
             <ModeToggle />
             {session ? (
@@ -46,6 +48,22 @@ export default async function Navbar() {
                       {nameExists ? session.user.name : "New User"}
                     </span>
                   </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <Link href="/dashboard">
+                    <DropdownMenuItem className="cursor-pointer">
+                      Dashboard
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="/discounts">
+                    <DropdownMenuItem className="cursor-pointer">
+                      Discounts
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="/my">
+                    <DropdownMenuItem className="cursor-pointer">
+                      My Watchlist
+                    </DropdownMenuItem>
+                  </Link>
                   <DropdownMenuSeparator />
                   <Link href="/account">
                     <DropdownMenuItem className="cursor-pointer">
