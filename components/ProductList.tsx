@@ -2,19 +2,10 @@
 import { useProducts } from "@/features/sales/hooks/useProducts";
 import React from "react";
 import ProductCard from "./ProductCard";
+import { z } from "zod";
+import { productSchema } from "@/prisma/zod";
 
-type Item = {
-  title: string;
-  discountedPrice: number;
-  originalPrice: number;
-  discount: number;
-  store: string;
-  imageUrl: string;
-};
-
-type ItemCardProps = {
-  item: Item;
-};
+type ProductSchema = z.infer<typeof productSchema>;
 
 const ProductList = () => {
   const { data, isLoading, error } = useProducts({});
@@ -27,16 +18,18 @@ const ProductList = () => {
     return <div>Loading ...</div>;
   }
   return (
-    <div>
+    <div className="flex flex-row flex-wrap">
       {data &&
-        data.data.products.map((product: Item) => {
+        data.data.products.map((product: ProductSchema) => {
           return (
             <ProductCard
+              id={product.id}
               discount={product.discount}
               store={product.store}
-              name={product.title}
-              priceAfter={product.discountedPrice}
-              priceBefore={product.originalPrice}
+              title={product.title}
+              originalPrice={product.discountedPrice}
+              discountedPrice={product.originalPrice}
+              imageUrl={product.imageUrl}
             />
           );
         })}

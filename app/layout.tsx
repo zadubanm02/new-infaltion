@@ -36,9 +36,9 @@ export default function RootLayout({
             <div>
               <main className="max-w-6xl mx-auto md:p-0 p-6">
                 <Navbar />
-                <div className="flex flex-row w-full">
-                  <Sidebar className="hidden lg:block w-64" />
-                  <div className="p-4">{children}</div>
+                <div className="flex">
+                  <Sidebar className="hidden lg:block w-72" />
+                  <div className="flex-1 px-4 py-2">{children}</div>
                 </div>
               </main>
             </div>
