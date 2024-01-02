@@ -4,9 +4,10 @@ import {
   filtersAtom,
 } from "@/features/sales/state/filterState";
 import { useQuery } from "@tanstack/react-query";
+import { useDebounce } from "@uidotdev/usehooks";
 import axios from "axios";
 import { useAtom } from "jotai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const initalState: Filters = {
   searchTerm: "",
@@ -28,7 +29,18 @@ export const useProducts = ({
     queryKey: ["product-count"],
     queryFn: async () => {
       const response = await axios.get<{ count: number }>(
-        "/api/products/count"
+        "/api/products/count",
+        {
+          params: {
+            limit,
+            offset,
+            filters: JSON.stringify({
+              searchTerm: filters.searchTerm,
+              store: filters.store,
+              priceRange: filters.priceRange,
+            }),
+          },
+        }
       );
       return response.data;
     },
@@ -59,9 +71,12 @@ export const useProducts = ({
     retryDelay: 3000,
   });
 
-  const handleSearch = (value: string) => {
-    const newFilters = { ...filters, searchTerm: value };
-    return setFilters(newFilters);
+  const handleSearch = (searchTerm: string) => {
+    const newFilters = { ...filters, searchTerm };
+    setFilters(newFilters);
+    if (searchTerm === "") {
+      setLocalFilters(newFilters);
+    }
   };
 
   const handleFiltering = () => {
