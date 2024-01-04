@@ -34,44 +34,25 @@ const usePagination = () => {
     nextPage: boolean;
     count?: number;
   }) => (
-    // <div className="py-2 flex flex-row items-center justify-center gap-2">
-    //   {count}
-
-    //   {currentPage > 0 && (
-    //     <Button
-    //       variant="secondary"
-    //       onClick={() => currentPage > 0 && setCurrentPage(currentPage - 1)}
-    //     >
-    //       Prev
-    //     </Button>
-    //   )}
-    //   {currentPage > 0 && nextPage && <div>{currentPage}</div>}
-    //   {nextPage && (
-    //     <Button
-    //       variant="secondary"
-    //       onClick={() => nextPage && setCurrentPage(currentPage + 1)}
-    //     >
-    //       Next
-    //     </Button>
-    //   )}
-    //   {count}
-    // </div>
     <Pagination>
       <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious href="#" />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">1</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
+        {currentPage > 0 && (
+          <PaginationItem
+            className="cursor-pointer"
+            onClick={() => currentPage > 0 && setCurrentPage(currentPage - 1)}
+          >
+            <PaginationPrevious />
+          </PaginationItem>
+        )}
+        <PaginationItem className="cursor-pointer">
+          <PaginationLink>{currentPage + 1}</PaginationLink>
         </PaginationItem>
         {nextPage && (
           <PaginationItem
+            className="cursor-pointer"
             onClick={() => nextPage && setCurrentPage(currentPage + 1)}
           >
-            <PaginationNext href="#" />
+            <PaginationNext />
           </PaginationItem>
         )}
       </PaginationContent>
