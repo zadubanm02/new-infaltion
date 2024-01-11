@@ -49,3 +49,16 @@ model Product {
   imageUrl               String
   store                  String
 }
+
+
+model Watchlist {
+  id                     String   @id @default(cuid())
+  items                  Item[]   @relation("Watchlist")
+}
+
+type Item {
+  itemId                 String     @default(cuid())
+  fromWatchlist          Watchlist? @relation("Watchlist",fields: [itemId] references: [id])
+  itemName               String
+  //watchlists             Watchlist[]
+}
