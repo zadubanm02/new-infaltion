@@ -1,64 +1,60 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 generator zod {
-  provider              = "zod-prisma"
-  output                = "./zod" 
-  relationModel         = true 
-  modelCase             = "camelCase" 
-  modelSuffix           = "Schema" 
-  useDecimalJs          = true 
-  prismaJsonNullability = true 
+  provider = "zod-prisma"
+  output = "./zod"
+  relationModel = true
+  modelCase = "camelCase"
+  modelSuffix = "Schema"
+  useDecimalJs = true
+  prismaJsonNullability = true
 }
 
 datasource db {
   provider = "mysql"
   relationMode = "prisma"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL")
 }
 
 model User {
-    id                     String    @id @default(cuid())
-    email                  String    @unique
-    name                   String
-    subscription           Subscription?
+  id String @id @default(cuid())
+  email String @unique
+  name String
+  subscription Subscription?
+  watchlist Watchlist?
 }
 
-
 model Subscription {
-  subscriptionId  	     String    @id @unique @default(cuid())
-  user                   User      @relation(fields: [userId], references: [id])
-  userId                 String    @unique 
-  stripeCustomerId       String    @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
-  stripePriceId          String?   @map(name: "stripe_price_id")
+  subscriptionId String @id @unique @default(cuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique
+  stripeCustomerId String @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId String? @unique @map(name: "stripe_subscription_id")
+  stripePriceId String? @map(name: "stripe_price_id")
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
 }
 
-
 model Product {
-  id                     String    @id @default(cuid())
-  title                  String    @unique
-  discount               Int
-  originalPrice          Float
-  discountedPrice        Float
-  imageUrl               String
-  store                  String
+  id String @id @default(cuid())
+  title String @unique
+  discount Int
+  originalPrice Float
+  discountedPrice Float
+  imageUrl String
+  store String
 }
-
 
 model Watchlist {
-  id                     String   @id @default(cuid())
-  items                  Item[]   @relation("Watchlist")
+  id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique
+  items Item[]
 }
 
-type Item {
-  itemId                 String     @default(cuid())
-  fromWatchlist          Watchlist? @relation("Watchlist",fields: [itemId] references: [id])
-  itemName               String
-  //watchlists             Watchlist[]
+model Item {
+  id String @id @default(cuid())
+  itemName String
+  watchlists Watchlist[]
 }
