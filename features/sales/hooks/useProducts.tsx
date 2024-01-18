@@ -55,7 +55,7 @@ export const useProducts = ({
       const response = await axios.get("/api/products", {
         params: {
           limit,
-          offset,
+          offset: filters.searchTerm.length > 0 ? 0 : offset,
           filters: JSON.stringify({
             searchTerm: filters.searchTerm,
             store: filters.store,

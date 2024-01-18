@@ -1,5 +1,6 @@
 import { getUserAuth } from "@/lib/auth/utils";
 import { db } from "@/lib/db";
+import { getPrismaClient } from "@/utils/prisma";
 import { Prisma } from "@prisma/client";
 import { NextApiRequest } from "next";
 import { NextResponse } from "next/server";
@@ -19,13 +20,12 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
   try {
-    const watchlist = await db.watchlist.findMany({
-      include: { items: true },
+    const user = await db.user.findUnique({
       where: {
-        userId: userId,
+        id: userId,
       },
     });
-    return NextResponse.json({ watchlist }, { status: 200 });
+    return NextResponse.json({ user }, { status: 200 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
@@ -34,9 +34,12 @@ export async function GET(req: Request) {
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
     ) {
+      console.log("KNOWNO ERROR", error.message);
       return new Response("Could not find user with id", { status: 404 });
     }
 
     return NextResponse.json({ error }, { status: 500 });
   }
 }
+
+export async function POST(req: Request) {}

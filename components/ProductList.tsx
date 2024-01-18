@@ -17,12 +17,13 @@ import {
   PaginationEllipsis,
   PaginationNext,
 } from "./ui/pagination";
+import useUser from "@/features/user/useUser";
 
 type ProductSchema = z.infer<typeof productSchema>;
 
-const ProductList = () => {
+const ProductList = async () => {
   const { PaginationComponent, offset } = usePagination();
-
+  const { dbUser } = useUser();
   const {
     data,
     isLoading,
@@ -72,13 +73,9 @@ const ProductList = () => {
           })}
 
         {data && countQuery.data && filters.searchTerm === "" && (
-          // <div className="flex flex-row w-full justify-end items-center">
-          //   <p className="text-sm font-semibold mr-2">
-          //     Dalsie produkty ( {countQuery.data.count} )
-          //   </p>
           <PaginationComponent nextPage={offset + 6 < countQuery.data.count} />
-          // </div>
         )}
+        <p>{JSON.stringify(dbUser)}</p>
       </div>
     </div>
   );
