@@ -23,7 +23,6 @@ type ProductSchema = z.infer<typeof productSchema>;
 
 const ProductList = async () => {
   const { PaginationComponent, offset } = usePagination();
-  const { dbUser } = useUser();
   const {
     data,
     isLoading,
@@ -75,7 +74,6 @@ const ProductList = async () => {
         {data && countQuery.data && filters.searchTerm === "" && (
           <PaginationComponent nextPage={offset + 6 < countQuery.data.count} />
         )}
-        <p>{JSON.stringify(dbUser)}</p>
       </div>
     </div>
   );

@@ -8,19 +8,21 @@ import { z } from "zod";
 
 export async function GET(req: Request) {
   const { session } = await getUserAuth();
-  const { searchParams } = new URL(req.url);
-  const userId = searchParams.get("userId");
+  const { pathname } = new URL(req.url);
+  const parts = pathname.split("/");
+  const userId = parts[parts.length - 1];
   if (!userId) {
+    console.log("USerID", userId);
     return NextResponse.json(
       { error: "Could not obtain userId" },
-      { status: 401 }
+      { status: 404 }
     );
   }
   if (!session) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
   try {
-    const user = await db.user.findUnique({
+    const user = await db.user.findUniqueOrThrow({
       where: {
         id: userId,
       },
@@ -34,12 +36,12 @@ export async function GET(req: Request) {
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
     ) {
-      console.log("KNOWNO ERROR", error.message);
-      return new Response("Could not find user with id", { status: 404 });
+      return NextResponse.json(
+        { error: `Could not find User with id ${userId}` },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({ error }, { status: 500 });
   }
 }
-
-export async function POST(req: Request) {}
