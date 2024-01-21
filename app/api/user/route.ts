@@ -8,13 +8,12 @@ export type User = z.infer<typeof userSchema>;
 
 export async function POST(req: Request) {
   const { session } = await getUserAuth();
-  const reqBody = await req.json();
-  console.log("REQ BODY", reqBody);
-  const body = userSchema.parse(reqBody.data);
-  console.log("REQ BODY", body);
+
   if (!session) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
+  const reqBody = await req.json();
+  const body = userSchema.parse(reqBody.data);
   try {
     const foundUser = await db.user.findUnique({
       where: {

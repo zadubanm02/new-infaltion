@@ -45,20 +45,17 @@ const useUser = () => {
         throw errResponse.response;
       }
     },
+    // retry query
     onSuccess(data, variables, context) {
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      console.log("Setting state");
       setRevalidateQuery((prev) => !prev);
       toast("User data has been updated", {
         description: `${new Date().toISOString()}`,
-        action: {
-          label: "OK",
-          onClick: () => console.log("Undo"),
-        },
       });
     },
   });
 
+  // if error from query fill data about user in db
   useEffect(() => {
     if (user) {
       createUserMutation.mutate({
