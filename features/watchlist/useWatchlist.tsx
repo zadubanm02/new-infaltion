@@ -44,10 +44,14 @@ export const useWatchlist = () => {
         throw errResponse.response;
       }
     },
-    // retry query
     onSuccess(data, variables, context) {
       queryClient.invalidateQueries({ queryKey: ["watchlist"] });
       toast("Watchlist has been saved", {
+        description: `${new Date().toISOString()}`,
+      });
+    },
+    onError(error) {
+      toast("Error saving watchlist", {
         description: `${new Date().toISOString()}`,
       });
     },
