@@ -21,7 +21,7 @@ import useUser from "@/features/user/useUser";
 
 type ProductSchema = z.infer<typeof productSchema>;
 
-const ProductList = async () => {
+const ProductList = () => {
   const { PaginationComponent, offset } = usePagination();
   const {
     data,

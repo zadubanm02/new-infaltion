@@ -1,5 +1,6 @@
 "use client";
 
+import MultiSelect from "@/components/MultiSelect";
 import { ProductSelect } from "@/components/product-select";
 import useUser from "@/features/user/useUser";
 import React from "react";
@@ -16,10 +17,10 @@ const My = () => {
   }
 
   return (
-    <div>
+    <div className="flex-1">
       <h1 className="text-xl font-semibold mb-4">My watchlist</h1>
-      {JSON.stringify(data)}
-      <ProductSelect />
+      <MultiSelect />
+      {/* <ProductSelect /> */}
     </div>
   );
 };

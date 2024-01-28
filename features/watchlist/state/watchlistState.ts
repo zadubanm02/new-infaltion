@@ -1,10 +1,12 @@
 import { atom } from "jotai";
 
-const watchAtom = atom<Array<string>>([]);
+export type Item = { value: string; label: string };
+
+const watchAtom = atom<Array<Item>>([]);
 
 export const watchlistAtom = atom(
   (get) => get(watchAtom),
-  (get, set, newWatchlist: Array<string>) => {
+  (get, set, newWatchlist: Array<Item>) => {
     set(watchAtom, newWatchlist);
   }
 );
