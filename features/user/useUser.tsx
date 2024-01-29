@@ -11,6 +11,7 @@ import { toast } from "sonner";
 const useUser = () => {
   const queryClient = useQueryClient();
   const { user } = useKindeBrowserClient();
+  const [retryCount, setRetryCount] = useState(0);
 
   const [revalidateQuery, setRevalidateQuery] = useState(false);
 
@@ -18,7 +19,6 @@ const useUser = () => {
     queryKey: ["user", revalidateQuery],
     queryFn: async () => {
       try {
-        console.log("Invoking me");
         const response = await axios.get(`/api/user/${user?.id}`);
         return response.data;
       } catch (error) {
@@ -57,12 +57,13 @@ const useUser = () => {
 
   // if error from query fill data about user in db
   useEffect(() => {
-    if (user) {
+    if (user && retryCount < 2) {
       createUserMutation.mutate({
         id: user?.id as string,
         name: `${user?.given_name} ${user?.family_name}`,
         email: user?.email as string,
       });
+      setRetryCount(retryCount + 1);
     }
   }, [error]);
 

@@ -31,8 +31,8 @@ export const useWatchlist = () => {
     retry: 0,
   });
 
-  const createUserMutation = useMutation({
-    mutationKey: ["createUser"],
+  const createOrUpdateWatchlistMutation = useMutation({
+    mutationKey: ["createWatchlist"],
     mutationFn: async (data: Watchlist) => {
       try {
         const response = await axios.post("api/watchlist", {

@@ -23,8 +23,15 @@ import {
 import { Item, watchlistAtom } from "@/features/watchlist/state/watchlistState";
 import { useAtom } from "jotai";
 import ProductBadge from "./ProductBadge";
+import { useWatchlist } from "@/features/watchlist/useWatchlist";
+import { Button } from "./ui/button";
+import { CheckSquare } from "lucide-react";
 
-const MultiSelect = () => {
+type ProductSelectProps = {
+  fetchedWatchlist?: any;
+};
+
+const MultiSelect = ({ fetchedWatchlist }: ProductSelectProps) => {
   const [watchlist, setWatchlist] = useAtom(watchlistAtom);
   const [items, setItems] = useState(productSuggestions);
   const popSuggestion = (item: Item) => {
@@ -36,21 +43,30 @@ const MultiSelect = () => {
   };
   const deleteProduct = (label: string) => {
     console.log("Deleting", label);
+    setWatchlist(watchlist.filter((watch) => watch.label !== label));
+    setItems([...items, { label, value: label }].sort(sortSuggestions));
   };
   return (
     <div className="flex-1">
-      {
-        //   watchlist.length > 0 &&
-        watchlist.map((item) => {
-          return (
-            <ProductBadge
-              label={item.label}
-              key={item.value}
-              onDelete={deleteProduct}
-            />
-          );
-        })
-      }
+      {watchlist.length > 0 && (
+        <Button>
+          <CheckSquare size={18} className="mr-1" /> Save Changes
+        </Button>
+      )}
+      <div className="my-2">
+        {
+          //   watchlist.length > 0 &&
+          watchlist.map((item) => {
+            return (
+              <ProductBadge
+                label={item.label}
+                key={item.value}
+                onDelete={deleteProduct}
+              />
+            );
+          })
+        }
+      </div>
       <Command className="rounded-lg border shadow-md">
         <CommandInput placeholder="Add product" />
         <CommandList>
@@ -76,3 +92,13 @@ const MultiSelect = () => {
 };
 
 export default MultiSelect;
+
+const sortSuggestions = (a: Item, b: Item) => {
+  if (a.label < b.label) {
+    return -1;
+  }
+  if (a.label > b.label) {
+    return 1;
+  }
+  return 0;
+};
