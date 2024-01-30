@@ -57,5 +57,5 @@ export const useWatchlist = () => {
     },
   });
 
-  return { data, error, isLoading };
+  return { data, error, isLoading, createOrUpdateWatchlistMutation };
 };
