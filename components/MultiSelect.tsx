@@ -32,6 +32,7 @@ type ProductSelectProps = {
 };
 
 const MultiSelect = ({ fetchedWatchlist }: ProductSelectProps) => {
+  const { data, error, isLoading } = useWatchlist();
   const [watchlist, setWatchlist] = useAtom(watchlistAtom);
   const [items, setItems] = useState(productSuggestions);
   const popSuggestion = (item: Item) => {
