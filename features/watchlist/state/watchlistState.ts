@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-export type Item = { value: string; label: string };
+export type Item = { id: string; itemName: string };
 
 const watchAtom = atom<Array<Item>>([]);
 

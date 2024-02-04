@@ -19,7 +19,11 @@ export const useWatchlist = () => {
     queryKey: ["watchlist"],
     queryFn: async () => {
       try {
-        const response = await axios.get(`/api/watchlist/${user?.id}`);
+        const response = await axios.get(`/api/watchlist/`, {
+          params: {
+            userId: user?.id,
+          },
+        });
         return response.data;
       } catch (error) {
         const errResponse = error as any;
@@ -29,6 +33,7 @@ export const useWatchlist = () => {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: 0,
+    enabled: !!user,
   });
 
   const createOrUpdateWatchlistMutation = useMutation({
