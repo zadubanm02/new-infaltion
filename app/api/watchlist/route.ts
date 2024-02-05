@@ -18,7 +18,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
   try {
-    const watchlist = await db.watchlist.findMany({
+    const watchlist = await db.watchlist.findUnique({
       include: { items: true },
       where: {
         userId: userId,
@@ -57,22 +57,40 @@ export async function POST(req: Request) {
   }
 
   const reqBody = await req.json();
-  const body = createWatchlistSchema.parse(reqBody);
+  console.log("Server data", JSON.stringify(reqBody.data));
+  const body = createWatchlistSchema.parse(reqBody.data);
+  console.log("Server body", body);
+
   try {
-    const watchlist = await db.watchlist.create({
-      data: {
+    // first disconnect items if there is the watchlist created
+    const watchlist = await db.watchlist.upsert({
+      where: { userId: body.userId },
+      update: {
+        userId: body.userId,
+        items: {
+          connect: [...body.items],
+        },
+      },
+      create: {
         userId: body.userId,
         items: {
           connect: [...body.items],
         },
       },
     });
+    // const watchlist = await db.watchlist.create({
+    //   data: {
+    //     userId: body.userId,
+    //     items: {
+    //       connect: [...body.items],
+    //     },
+    //   },
+    // });
     return NextResponse.json({ watchlist }, { status: 200 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
     }
-
     return NextResponse.json({ error }, { status: 500 });
   }
 }

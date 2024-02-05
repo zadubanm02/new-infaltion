@@ -12,20 +12,31 @@ import {
 import { Item, watchlistAtom } from "@/features/watchlist/state/watchlistState";
 import { useAtom } from "jotai";
 import ProductBadge from "./ProductBadge";
-import { useWatchlist } from "@/features/watchlist/useWatchlist";
+import { Watchlist, useWatchlist } from "@/features/watchlist/useWatchlist";
 import { Button } from "./ui/button";
 import { CheckSquare } from "lucide-react";
 import useItems from "@/features/item/useItems";
 
 const MultiSelect = () => {
-  const { data, error, isLoading, createOrUpdateWatchlistMutation } =
-    useWatchlist();
+  // queries
+  const {
+    data,
+    error,
+    isLoading,
+    createOrUpdateWatchlistMutation,
+    user,
+    watchlist,
+    setWatchlist,
+  } = useWatchlist();
   const { data: itemsResponse, error: itemsError } = useItems();
-  const [watchlist, setWatchlist] = useAtom(watchlistAtom);
+
+  // state
   const [items, setItems] = useState(itemsResponse);
   const popSuggestion = (item: Item) => {
     setItems(items?.filter((watch) => watch !== item));
   };
+
+  // methods
   const addProduct = (item: Item) => {
     popSuggestion(item);
     setWatchlist([...watchlist, item]);
@@ -39,20 +50,33 @@ const MultiSelect = () => {
     );
   };
 
+  // mutations
+  const editWatchlist = () => {
+    const preparedData: Watchlist = {
+      userId: user?.id as string,
+      items: watchlist.map((item) => ({ id: item.id })),
+    };
+    console.log("Prepared data", preparedData);
+    return createOrUpdateWatchlistMutation.mutate(preparedData);
+  };
+
+  // error and loading states
   if (error) {
-    return <div>{JSON.stringify(error)}</div>;
+    return <div>{JSON.stringify(error.message)}</div>;
   }
   if (itemsError) {
-    return <div>{JSON.stringify(itemsError)}</div>;
+    return <div>{JSON.stringify(itemsError.message)}</div>;
   }
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  // jsx
   return (
     <div className="flex-1">
       {watchlist.length > 0 && (
-        <Button>
+        <Button onClick={() => editWatchlist()}>
           <CheckSquare size={18} className="mr-1" /> Save Changes
         </Button>
       )}
