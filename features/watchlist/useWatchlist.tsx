@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import { z } from "zod";
-import { watchlistAtom } from "./state/watchlistState";
+import { originalWatchlistAtom, watchlistAtom } from "./state/watchlistState";
 import { useAtom } from "jotai";
 
 type WatchlistBase = z.infer<typeof watchlistSchema>;
@@ -16,12 +16,16 @@ type CreateWatchlist = Omit<WatchlistBase, "id">;
 export type Watchlist = {
   userId: string;
   items: Array<{ id: string }>;
+  oldItems: Array<{ id: string }>;
 };
 
 export const useWatchlist = () => {
   const { user } = useKindeBrowserClient();
   const queryClient = useQueryClient();
   const [watchlist, setWatchlist] = useAtom(watchlistAtom);
+  const [originalWatchlist, setOrginalWatchlist] = useAtom(
+    originalWatchlistAtom
+  );
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["watchlist"],
@@ -34,6 +38,7 @@ export const useWatchlist = () => {
         });
         console.log("Response data", response.data.watchlist);
         setWatchlist(response.data.watchlist.items);
+        setOrginalWatchlist(response.data.watchlist.items);
         return response.data;
       } catch (error) {
         const errResponse = error as any;
@@ -80,5 +85,6 @@ export const useWatchlist = () => {
     createOrUpdateWatchlistMutation,
     watchlist,
     setWatchlist,
+    originalWatchlist,
   };
 };

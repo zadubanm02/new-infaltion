@@ -47,6 +47,7 @@ const itemIdSchema = z.object({
 const createWatchlistSchema = z.object({
   userId: z.string().min(1),
   items: z.array(itemIdSchema),
+  oldItems: z.array(itemIdSchema),
 });
 
 export async function POST(req: Request) {
@@ -57,9 +58,18 @@ export async function POST(req: Request) {
   }
 
   const reqBody = await req.json();
-  console.log("Server data", JSON.stringify(reqBody.data));
   const body = createWatchlistSchema.parse(reqBody.data);
-  console.log("Server body", body);
+
+  const addedItems = body.items.filter(
+    (newItem) => !body.oldItems.includes(newItem)
+  );
+  const minusItems = body.oldItems.filter(
+    (oldItem) => !body.items.includes(oldItem)
+  );
+
+  console.log("BODY", body);
+  console.log("ItemsTo DISCONNECT", addedItems);
+  console.log("ItemsTo CONNECT", minusItems);
 
   try {
     // first disconnect items if there is the watchlist created
@@ -68,7 +78,8 @@ export async function POST(req: Request) {
       update: {
         userId: body.userId,
         items: {
-          connect: [...body.items],
+          disconnect: [...minusItems],
+          connect: [...addedItems],
         },
       },
       create: {

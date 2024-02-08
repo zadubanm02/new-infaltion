@@ -27,34 +27,46 @@ const MultiSelect = () => {
     user,
     watchlist,
     setWatchlist,
+    originalWatchlist,
   } = useWatchlist();
   const { data: itemsResponse, error: itemsError } = useItems();
 
   // state
   const [items, setItems] = useState(itemsResponse);
-  const popSuggestion = (item: Item) => {
-    setItems(items?.filter((watch) => watch !== item));
-  };
 
   // methods
-  const addProduct = (item: Item) => {
+  // delete suggestion from suggestion commands
+  function popSuggestion(item: Item) {
+    const newSuggestions = items?.filter((watch) => watch !== item);
+    const unique = Array.from(new Set(newSuggestions));
+    setItems(unique);
+  }
+
+  function addProduct(item: Item) {
     popSuggestion(item);
     setWatchlist([...watchlist, item]);
-  };
-  const deleteProduct = (item: Item) => {
+  }
+
+  function deleteProduct(item: Item) {
     setWatchlist(watchlist.filter((watch) => watch.itemName !== item.itemName));
-    setItems(
-      [...(items ?? []), { id: item.id, itemName: item.itemName }].sort(
-        sortSuggestions
-      )
-    );
-  };
+    console.log("deleting item", item, "ITEMS", items);
+
+    // check if product is in the suggestions if not then add it
+    if (items?.includes(item)) {
+      console.log("delete product is in items", item);
+      return;
+    }
+    const newSuggestions = [...(items ?? []), item].sort(sortSuggestions);
+    const uniqueSuggestions = Array.from(new Set(newSuggestions));
+    setItems(uniqueSuggestions);
+  }
 
   // mutations
   const editWatchlist = () => {
     const preparedData: Watchlist = {
       userId: user?.id as string,
       items: watchlist.map((item) => ({ id: item.id })),
+      oldItems: originalWatchlist.map((item) => ({ id: item.id })),
     };
     console.log("Prepared data", preparedData);
     return createOrUpdateWatchlistMutation.mutate(preparedData);
@@ -99,17 +111,16 @@ const MultiSelect = () => {
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Products">
-            {items &&
-              items.map((suggestion) => {
-                return (
-                  <CommandItem
-                    key={suggestion.id}
-                    onSelect={() => addProduct(suggestion)}
-                  >
-                    {suggestion.itemName}
-                  </CommandItem>
-                );
-              })}
+            {items?.map((suggestion) => {
+              return (
+                <CommandItem
+                  key={suggestion.id}
+                  onSelect={() => addProduct(suggestion)}
+                >
+                  {suggestion.itemName}
+                </CommandItem>
+              );
+            })}
           </CommandGroup>
         </CommandList>
       </Command>
