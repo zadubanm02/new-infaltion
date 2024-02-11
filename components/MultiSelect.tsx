@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { Badge } from "./ui/badge";
-import { productSuggestions, suggestions } from "@/data/watchlistValues";
 import {
   Command,
   CommandEmpty,
@@ -10,7 +8,6 @@ import {
   CommandList,
 } from "./ui/command";
 import { Item, watchlistAtom } from "@/features/watchlist/state/watchlistState";
-import { useAtom } from "jotai";
 import ProductBadge from "./ProductBadge";
 import { Watchlist, useWatchlist } from "@/features/watchlist/useWatchlist";
 import { Button } from "./ui/button";
@@ -49,16 +46,16 @@ const MultiSelect = () => {
 
   function deleteProduct(item: Item) {
     setWatchlist(watchlist.filter((watch) => watch.itemName !== item.itemName));
-    console.log("deleting item", item, "ITEMS", items);
-
     // check if product is in the suggestions if not then add it
-    if (items?.includes(item)) {
-      console.log("delete product is in items", item);
+    const found = items?.find(
+      (findingItem) => findingItem.itemName === item.itemName
+    );
+    if (found) {
       return;
     }
+
     const newSuggestions = [...(items ?? []), item].sort(sortSuggestions);
-    const uniqueSuggestions = Array.from(new Set(newSuggestions));
-    setItems(uniqueSuggestions);
+    setItems(newSuggestions);
   }
 
   // mutations
@@ -68,7 +65,6 @@ const MultiSelect = () => {
       items: watchlist.map((item) => ({ id: item.id })),
       oldItems: originalWatchlist.map((item) => ({ id: item.id })),
     };
-    console.log("Prepared data", preparedData);
     return createOrUpdateWatchlistMutation.mutate(preparedData);
   };
 

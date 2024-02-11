@@ -3,7 +3,7 @@ import React from "react";
 
 type BadgeProps = {
   label: string;
-  onDelete: (id: string) => void;
+  onDelete: () => void;
 };
 
 const ProductBadge = ({ label, onDelete }: BadgeProps) => {
@@ -13,7 +13,7 @@ const ProductBadge = ({ label, onDelete }: BadgeProps) => {
       <XCircle
         className="ml-1 cursor-pointer text-slate-700 hover:text-black"
         size={20}
-        onClick={() => onDelete(label)}
+        onClick={onDelete}
       />
     </span>
   );
