@@ -17,7 +17,7 @@ const ProductCard: React.FC<ProductProps> = ({
   store,
 }) => {
   return (
-    <Card className="w-[175px] border-none rounded-lg cursor-pointer mr-4 mb-4">
+    <Card className="w-[175px] border-none rounded-lg cursor-pointer mr-4 mb-4 shadow-none">
       <CardHeader className="p-0">
         <div className="overflow-hidden rounded-lg">
           <Image
@@ -38,8 +38,12 @@ const ProductCard: React.FC<ProductProps> = ({
       </CardHeader>
       <CardContent className="p-2">
         <p className="font-semibold">{title}</p>
-        <p className="text-xs">Before: {originalPrice}</p>
-        <p className="text-xs">Now: {discountedPrice}</p>
+        <span className="text-xs flex flex-row">
+          Before: <p className="ml-2 font-bold">{originalPrice} €</p>
+        </span>
+        <span className="text-sm flex flex-row">
+          Now: <p className="ml-2 font-bold">{discountedPrice} €</p>
+        </span>
       </CardContent>
     </Card>
   );

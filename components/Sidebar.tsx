@@ -18,7 +18,7 @@ export async function Sidebar({ className }: SidebarProps) {
         <div className="pr-3 py-2">
           <div className="space-y-1">
             <Link href="/dashboard">
-              <Button variant="secondary" className="w-full justify-start">
+              <Button variant="ghost" className="w-full justify-start">
                 <LayoutDashboard size="16" className="mr-2" />
                 Dashboard
               </Button>
