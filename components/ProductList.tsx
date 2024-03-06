@@ -64,8 +64,8 @@ const ProductList = () => {
                 discount={product.discount}
                 store={product.store}
                 title={product.title}
-                originalPrice={product.discountedPrice}
-                discountedPrice={product.originalPrice}
+                originalPrice={product.originalPrice}
+                discountedPrice={product.discountedPrice}
                 imageUrl={product.imageUrl}
               />
             );

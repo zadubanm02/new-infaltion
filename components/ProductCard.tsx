@@ -17,7 +17,7 @@ const ProductCard: React.FC<ProductProps> = ({
   store,
 }) => {
   return (
-    <Card className="w-[175px] border-none rounded-lg cursor-pointer mr-4 mb-4 shadow-none">
+    <Card className="w-[175px] border-none rounded-lg cursor-pointer mr-4 mb-4 shadow-none relative">
       <CardHeader className="p-0">
         <div className="overflow-hidden rounded-lg">
           <Image
@@ -45,6 +45,21 @@ const ProductCard: React.FC<ProductProps> = ({
           Now: <p className="ml-2 font-bold">{discountedPrice} €</p>
         </span>
       </CardContent>
+      {store === "Tesco" ? (
+        <span className="absolute top-1 right-1 text-sm flex flex-row font-bold bg-white rounded-md p-1">
+          <p className="text-red-600 underline decoration-indigo-500 decoration-2">
+            T
+          </p>
+          esco
+        </span>
+      ) : (
+        <span className="absolute top-1 right-1 text-sm flex flex-row font-bold text-red-600">
+          Kaufland
+        </span>
+      )}
+      <span className="absolute top-1 left-1 text-sm flex flex-row font-bold bg-white rounded-md p-1 text-red-600">
+        -{discount}%
+      </span>
     </Card>
   );
 };

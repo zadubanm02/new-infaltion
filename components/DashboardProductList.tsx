@@ -11,20 +11,23 @@ type ProductSchema = z.infer<typeof productSchema>;
 
 const DashboardProductList = () => {
   const { data, error, isLoading } = useMatchedProducts();
-  const itemsInSale = data.items.length;
-  const sale = data.items.reduce((acc: number, item: ProductSchema) => {
+  const itemsInSale = data?.items?.length;
+  const sale = data?.items?.reduce((acc: number, item: ProductSchema) => {
     return acc + (item.originalPrice - item.discountedPrice);
   }, 0);
 
   if (isLoading) {
     return <p>Loading...</p>;
   }
+  if (error) {
+    return <p>{error.message}</p>;
+  }
   return (
     <>
       <div className="flex flex-row">
         <StatCard
           title="Total usetrene"
-          value={`$ ${sale}`}
+          value={sale}
           description={`Za svoje produkty zaplatis o ${sale} eura menej`}
           icon={<DollarSignIcon />}
         />
@@ -46,16 +49,12 @@ const DashboardProductList = () => {
                 discount={product.discount}
                 store={product.store}
                 title={product.title}
-                originalPrice={product.discountedPrice}
-                discountedPrice={product.originalPrice}
+                originalPrice={product.originalPrice}
+                discountedPrice={product.discountedPrice}
                 imageUrl={product.imageUrl}
               />
             );
           })}
-
-        {/* {data && countQuery.data && filters.searchTerm === "" && (
-    <PaginationComponent nextPage={offset + 6 < countQuery.data.count} />
-  )} */}
       </div>
     </>
   );
