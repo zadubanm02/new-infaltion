@@ -16,14 +16,14 @@ client.defineJob({
   }),
   run: async (payload, io, ctx) => {
     // Scrape Tesco
-    await io.logger.info(`Starting to scrape data from Tesco`);
-    const resultTesco = await io.runTask("scrape-tesco-data", async () => {
-      scrapeTesco(io);
-      return {
-        message: "Successfuly scraped",
-      };
-    });
-    await io.logger.info("✨ Data successfuly scraped from Tesco ✨");
+    // await io.logger.info(`Starting to scrape data from Tesco`);
+    // const resultTesco = await io.runTask("scrape-tesco-data", async () => {
+    //   scrapeTesco(io);
+    //   return {
+    //     message: "Successfuly scraped",
+    //   };
+    // });
+    // await io.logger.info("✨ Data successfuly scraped from Tesco ✨");
 
     // Scrape Kaufland
     await io.logger.info(`Starting to scrape data from Kaufland`);

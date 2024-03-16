@@ -4,9 +4,10 @@ import { createProductsInDb } from "./db";
 
 export const scrapeKaufland = async (io: IO) => {
   try {
-    const products = await getProductDataKaufland();
+    const products = await getProductDataKaufland(io);
     if (products) {
-      await createProductsInDb(products, io);
+      io.logger.info("Products", { products });
+      await createProductsInDb(products, io, "Kaufland");
     }
     io.logger.info("Kaufland data scraped successfuly");
   } catch (error) {

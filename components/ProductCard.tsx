@@ -46,7 +46,7 @@ const ProductCard: React.FC<ProductProps> = ({
         </span>
       </CardContent>
       {store === "Tesco" ? (
-        <span className="absolute top-1 right-1 text-sm flex flex-row font-bold bg-white rounded-md p-1">
+        <span className="absolute top-1 right-1 text-sm flex flex-row font-bold bg-white rounded-md p-1 dark:text-primary-foreground">
           <p className="text-red-600 underline decoration-indigo-500 decoration-2">
             T
           </p>

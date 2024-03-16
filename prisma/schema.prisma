@@ -40,8 +40,8 @@ model Product {
   id String @id @default(cuid())
   title String @unique
   discount Int
-  originalPrice Float
-  discountedPrice Float
+  originalPrice Float @default(0.00)
+  discountedPrice Float @default(0.00)
   imageUrl String
   store String
 }

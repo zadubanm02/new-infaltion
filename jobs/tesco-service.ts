@@ -43,7 +43,7 @@ export const findProducts = async (text: string, io: IO) => {
       }
     });
 
-    await createProductsInDb(products, io);
+    await createProductsInDb(products, io, "Tesco");
     return products;
   } catch (error) {
     io.logger.error("Error in scrapper", { error });
