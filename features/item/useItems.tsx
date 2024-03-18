@@ -19,6 +19,7 @@ const useItems = () => {
     refetchOnReconnect: false,
     retry: 0,
     // cache for an hour
+    staleTime: 36000000,
     gcTime: 36000000,
   });
 

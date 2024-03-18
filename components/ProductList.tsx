@@ -6,18 +6,18 @@ import { z } from "zod";
 import { productSchema } from "@/prisma/zod";
 import usePagination from "@/features/common/hooks/usePagination";
 import Search from "./Search";
-import { useDebounce } from "@uidotdev/usehooks";
 import { Button } from "./ui/button";
+
 import {
-  PaginationContent,
-  PaginationItem,
-  Pagination,
-  PaginationPrevious,
-  PaginationLink,
-  PaginationEllipsis,
-  PaginationNext,
-} from "./ui/pagination";
-import useUser from "@/features/user/useUser";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { useAtom } from "jotai";
+import { Store, filtersAtom } from "@/features/sales/state/filterState";
+import { Skeleton } from "./ui/skeleton";
 
 type ProductSchema = z.infer<typeof productSchema>;
 
@@ -33,12 +33,27 @@ const ProductList = () => {
     countQuery,
   } = useProducts({ limit: 6, offset: offset });
 
+  const [filtersFromAtom, setFilters] = useAtom(filtersAtom);
+  function handleStoreSelect(value: string) {
+    const newFilters = { ...filters, store: value as Store };
+    setFilters(newFilters);
+    handleFiltering();
+  }
+
   if (error) {
     return <div>Error</div>;
   }
 
   if (isLoading) {
-    return <div>Loading ...</div>;
+    return (
+      <div className="flex items-center space-x-4">
+        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -51,6 +66,16 @@ const ProductList = () => {
           onChange={(e) => handleSearch(e.target.value)}
           value={filters.searchTerm}
         />
+        <Select onValueChange={(value) => handleStoreSelect(value)}>
+          <SelectTrigger className="w-[100px] mr-2">
+            <SelectValue placeholder="Store" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="All">All</SelectItem>
+            <SelectItem value="Tesco">Tesco</SelectItem>
+            <SelectItem value="Kaufland">Kaufland</SelectItem>
+          </SelectContent>
+        </Select>
         <Button onClick={handleFiltering}>Search</Button>
       </div>
 

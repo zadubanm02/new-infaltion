@@ -46,6 +46,7 @@ export const useProducts = ({
     },
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+    staleTime: 36000000,
     retry: 0,
   });
 
@@ -67,6 +68,7 @@ export const useProducts = ({
     },
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+    staleTime: 36000000,
     retry: 1,
     retryDelay: 3000,
   });

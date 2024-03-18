@@ -20,14 +20,15 @@ export const getProductDataKaufland = async (io: IO) => {
     },
   };
   console.log("Init");
+  let finalUrl = "";
   try {
     let data: ProductObejct[] = [];
     for (const path of config.kaufland.paths) {
       // fetch url
-      const finalUrl = `${url}${path}`;
+      finalUrl = `${url}${path}`;
       io.logger.info("URL scrapping kaufland", { finalUrl });
 
-      return fetch(finalUrl, init)
+      fetch(finalUrl, init)
         .then(async (res) => {
           const text = await res.text();
           const $ = cheerio.load(text);
@@ -66,22 +67,14 @@ export const getProductDataKaufland = async (io: IO) => {
               imageUrl: imageUrl ?? "img",
               store: "Kaufland",
             });
-            io.logger.info("ITEM", {
-              title: title,
-              discount: discount,
-              discountedPrice: discountedPrice,
-              originalPrice: originalPrice,
-              imageUrl: imageUrl ?? "img",
-              store: "Kaufland",
-            });
           });
-          return data;
         })
         .catch((e) => {
           io.logger.error("Error scrapping kaufland", { e });
           console.log("Error");
         });
     }
+    return data;
   } catch (error) {
     io.logger.error("All get products fail", { error });
     throw error;
@@ -97,31 +90,23 @@ function composeTitle(title?: string) {
 
 const composePrice = (price: string | null | undefined, io: IO) => {
   if (price) {
-    io.logger.info("I Have price", { price });
-
     if (price === "") {
       return 0.0;
     }
     if (price === "iba\n                \n                \n            iba") {
-      io.logger.info("Iba", { price });
       return 0.0;
     }
     if (price === "iba") {
-      io.logger.info("Iba", { price });
       return 0.0;
     }
     return parseFloat(price.replace(",", "."));
   }
   if (price === "") {
-    io.logger.info("Empty string", { price });
     return 0.0;
   }
   if (price === "iba") {
-    io.logger.info("Iba", { price });
     return 0.0;
   }
-
-  io.logger.info("Returning null", { price });
   return 0.0;
 };
 

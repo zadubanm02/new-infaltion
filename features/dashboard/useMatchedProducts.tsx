@@ -25,6 +25,7 @@ const useMatchedProducts = () => {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: 0,
+    staleTime: 600,
     enabled: !!user,
   });
   return { data, error, isLoading };

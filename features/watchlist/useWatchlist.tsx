@@ -48,6 +48,7 @@ export const useWatchlist = () => {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: 0,
+    staleTime: 36000000,
     enabled: !!user,
   });
 
@@ -65,7 +66,7 @@ export const useWatchlist = () => {
       }
     },
     onSuccess(data, variables, context) {
-      queryClient.invalidateQueries({ queryKey: ["watchlist"] });
+      queryClient.invalidateQueries({ queryKey: ["watchlist", "matched"] });
       toast("Watchlist has been saved", {
         description: `${new Date().toISOString()}`,
       });

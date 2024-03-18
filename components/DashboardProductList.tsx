@@ -12,9 +12,11 @@ type ProductSchema = z.infer<typeof productSchema>;
 const DashboardProductList = () => {
   const { data, error, isLoading } = useMatchedProducts();
   const itemsInSale = data?.items?.length;
-  const sale = data?.items?.reduce((acc: number, item: ProductSchema) => {
-    return acc + (item.originalPrice - item.discountedPrice);
-  }, 0);
+  const sale = data?.items
+    ?.reduce((acc: number, item: ProductSchema): number => {
+      return acc + (item.originalPrice - item.discountedPrice);
+    }, 0)
+    .toFixed(2);
 
   if (isLoading) {
     return <p>Loading...</p>;
