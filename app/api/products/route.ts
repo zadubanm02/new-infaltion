@@ -1,22 +1,10 @@
+import { Filters, Store } from "@/features/item/types";
 import { getUserAuth } from "@/lib/auth/utils";
 import { db } from "@/lib/db";
 import { getPrismaClient, transformNumber } from "@/utils/prisma";
 import { NextApiRequest } from "next";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-
-export enum Store {
-  Kaufland = "Kaufland",
-  Lidl = "Lidl",
-  Tesco = "Tesco",
-  All = "All",
-}
-
-export type Filters = {
-  searchTerm: string;
-  store: Store | null;
-  priceRange: number[];
-};
 
 export async function GET(req: Request) {
   const { session } = await getUserAuth();
